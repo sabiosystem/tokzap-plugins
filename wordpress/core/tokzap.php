@@ -1,5 +1,9 @@
 <?php
 
+use TokZap\Auth\LoginOtp;
+use TokZap\Auth\RegistrationOtp;
+use TokZap\Shortcodes\OtpFormShortcode;
+
 /**
  * Plugin Name: TokZap WhatsApp OTP
  * Plugin URI:  https://tokzap.com
@@ -19,7 +23,7 @@ define('TOKZAP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('TOKZAP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('TOKZAP_API_BASE', 'https://api.tokzap.com/v1');
 
-// Dependências
+// Dependências legadas (mantidas para compatibilidade)
 require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-api.php';
 require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-otp.php';
 require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-shortcode.php';
@@ -27,6 +31,12 @@ require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-shortcode.php';
 // Admin
 require_once TOKZAP_PLUGIN_DIR.'src/Admin/SettingsPage.php';
 require_once TOKZAP_PLUGIN_DIR.'src/Admin/OnboardingWizard.php';
+
+// Namespaced: API client, shortcode, autenticação
+require_once TOKZAP_PLUGIN_DIR.'src/Api/TokZapClient.php';
+require_once TOKZAP_PLUGIN_DIR.'src/Shortcodes/OtpFormShortcode.php';
+require_once TOKZAP_PLUGIN_DIR.'src/Auth/LoginOtp.php';
+require_once TOKZAP_PLUGIN_DIR.'src/Auth/RegistrationOtp.php';
 
 /**
  * Classe principal do plugin TokZap.
@@ -65,14 +75,23 @@ class TokZap_Plugin
             new TokZap_OnboardingWizard;
         }
 
-        // Frontend: assets e AJAX para o widget/shortcode
+        // Frontend: assets
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
-        add_action('wp_ajax_tokzap_send_otp', [$this, 'ajax_send_otp']);
-        add_action('wp_ajax_nopriv_tokzap_send_otp', [$this, 'ajax_send_otp']);
-        add_action('wp_ajax_tokzap_verify_otp', [$this, 'ajax_verify_otp']);
-        add_action('wp_ajax_nopriv_tokzap_verify_otp', [$this, 'ajax_verify_otp']);
 
-        TokZap_Shortcode::init();
+        // Shortcode OTP (namespaced) — AJAX: send + verify
+        $shortcode = new OtpFormShortcode;
+        $shortcode->register();
+
+        add_action('wp_ajax_tokzap_send_otp', [OtpFormShortcode::class, 'ajaxSend']);
+        add_action('wp_ajax_nopriv_tokzap_send_otp', [OtpFormShortcode::class, 'ajaxSend']);
+        add_action('wp_ajax_tokzap_verify_otp', [OtpFormShortcode::class, 'ajaxVerify']);
+        add_action('wp_ajax_nopriv_tokzap_verify_otp', [OtpFormShortcode::class, 'ajaxVerify']);
+
+        // 2FA no login (namespaced)
+        (new LoginOtp)->register();
+
+        // OTP no registro de novos usuários (namespaced)
+        (new RegistrationOtp)->register();
     }
 
     /**
@@ -81,71 +100,30 @@ class TokZap_Plugin
     public function enqueue_frontend_assets(): void
     {
         wp_enqueue_style(
-            'tokzap-widget',
-            TOKZAP_PLUGIN_URL.'assets/tokzap-widget.css',
+            'tokzap-form',
+            TOKZAP_PLUGIN_URL.'assets/css/form.css',
             [],
             TOKZAP_VERSION
         );
 
         wp_enqueue_script(
-            'tokzap-widget',
-            TOKZAP_PLUGIN_URL.'assets/tokzap-widget.js',
-            [],
+            'tokzap-frontend',
+            TOKZAP_PLUGIN_URL.'assets/js/frontend.js',
+            ['jquery'],
             TOKZAP_VERSION,
             true
         );
 
-        wp_localize_script('tokzap-widget', 'tokzapSettings', [
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('tokzap_otp'),
+        wp_localize_script('tokzap-frontend', 'tokzapFrontend', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('tokzap_frontend'),
+            'i18n' => [
+                'sending' => __('Enviando...', 'tokzap'),
+                'verifying' => __('Verificando...', 'tokzap'),
+                'invalidPhone' => __('Digite um número válido com DDD.', 'tokzap'),
+                'invalidCode' => __('Digite os 6 dígitos do código.', 'tokzap'),
+            ],
         ]);
-    }
-
-    /**
-     * Handler AJAX: envia OTP para um número de telefone.
-     */
-    public function ajax_send_otp(): void
-    {
-        check_ajax_referer('tokzap_otp', 'nonce');
-
-        $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
-
-        if (empty($phone)) {
-            wp_send_json_error(['message' => __('Número de telefone é obrigatório.', 'tokzap')]);
-        }
-
-        $otp = new TokZap_OTP;
-        $result = $otp->send($phone);
-
-        if (is_wp_error($result)) {
-            wp_send_json_error(['message' => $result->get_error_message()]);
-        }
-
-        wp_send_json_success(['message' => __('Código enviado via WhatsApp.', 'tokzap')]);
-    }
-
-    /**
-     * Handler AJAX: verifica o código OTP informado.
-     */
-    public function ajax_verify_otp(): void
-    {
-        check_ajax_referer('tokzap_otp', 'nonce');
-
-        $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
-        $code = isset($_POST['code']) ? sanitize_text_field(wp_unslash($_POST['code'])) : '';
-
-        if (empty($phone) || empty($code)) {
-            wp_send_json_error(['message' => __('Telefone e código são obrigatórios.', 'tokzap')]);
-        }
-
-        $otp = new TokZap_OTP;
-        $result = $otp->verify($phone, $code);
-
-        if (is_wp_error($result)) {
-            wp_send_json_error(['message' => $result->get_error_message()]);
-        }
-
-        wp_send_json_success(['verified' => true]);
     }
 }
 

@@ -1,0 +1,274 @@
+/**
+ * TokZap — Estilos do formulário OTP
+ *
+ * Zero dependência de tema. Mobile-first.
+ * Variáveis CSS permitem customização via CSS filho ou add-on.
+ */
+
+/* =========================================================================
+   Variáveis — escopo no wrapper para não vazar para o tema
+   ========================================================================= */
+
+.tokzap-form-wrap {
+    --tokzap-primary:      #25D366;
+    --tokzap-primary-dark: #128C7E;
+    --tokzap-text:         #1a1a1a;
+    --tokzap-text-muted:   #6b7280;
+    --tokzap-border:       #e5e7eb;
+    --tokzap-bg:           #ffffff;
+    --tokzap-radius:       8px;
+    --tokzap-error:        #dc2626;
+    --tokzap-success:      #16a34a;
+}
+
+/* =========================================================================
+   Wrapper
+   ========================================================================= */
+
+.tokzap-form-wrap {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 24px;
+    border: 1px solid var(--tokzap-border);
+    border-radius: var(--tokzap-radius);
+    background: var(--tokzap-bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, sans-serif;
+    font-size: 1rem;
+    color: var(--tokzap-text);
+    box-sizing: border-box;
+}
+
+/* =========================================================================
+   Título
+   ========================================================================= */
+
+.tokzap-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--tokzap-text);
+}
+
+/* =========================================================================
+   Campo de telefone
+   ========================================================================= */
+
+.tokzap-field label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--tokzap-text);
+}
+
+.tokzap-phone-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--tokzap-border);
+    border-radius: var(--tokzap-radius);
+    font-size: 1rem;
+    color: var(--tokzap-text);
+    background: var(--tokzap-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.tokzap-phone-input:focus {
+    border-color: var(--tokzap-primary);
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+}
+
+/* =========================================================================
+   Botão principal
+   ========================================================================= */
+
+.tokzap-btn {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    background: var(--tokzap-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--tokzap-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    text-align: center;
+}
+
+.tokzap-btn:hover {
+    background: var(--tokzap-primary-dark);
+}
+
+.tokzap-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* =========================================================================
+   Info do passo 2
+   ========================================================================= */
+
+.tokzap-info {
+    font-size: 0.875rem;
+    color: var(--tokzap-text-muted);
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.tokzap-phone-display {
+    color: var(--tokzap-text);
+}
+
+/* =========================================================================
+   Inputs de código (6 dígitos)
+   ========================================================================= */
+
+.tokzap-code-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.tokzap-digit {
+    width: 44px;
+    height: 52px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--tokzap-text);
+    border: 2px solid var(--tokzap-border);
+    border-radius: var(--tokzap-radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.15s;
+    box-sizing: border-box;
+    outline: none;
+    background: var(--tokzap-bg);
+    padding: 0;
+}
+
+.tokzap-digit:focus {
+    border-color: var(--tokzap-primary);
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+}
+
+.tokzap-digit.filled {
+    border-color: var(--tokzap-primary);
+    background: rgba(37, 211, 102, 0.05);
+}
+
+/* =========================================================================
+   Mensagens inline
+   ========================================================================= */
+
+.tokzap-message {
+    font-size: 0.875rem;
+    margin-top: 8px;
+    min-height: 20px;
+    line-height: 1.4;
+}
+
+.tokzap-message.error {
+    color: var(--tokzap-error);
+}
+
+.tokzap-message.success {
+    color: var(--tokzap-success);
+}
+
+.tokzap-message.info {
+    color: var(--tokzap-text-muted);
+}
+
+/* =========================================================================
+   Countdown e reenvio
+   ========================================================================= */
+
+.tokzap-resend {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.875rem;
+    color: var(--tokzap-text-muted);
+}
+
+.tokzap-btn-link {
+    background: none;
+    border: none;
+    color: var(--tokzap-primary-dark);
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0;
+    text-decoration: underline;
+    line-height: inherit;
+}
+
+.tokzap-btn-link:hover {
+    color: var(--tokzap-primary);
+}
+
+/* =========================================================================
+   Passo 3 — sucesso
+   ========================================================================= */
+
+.tokzap-step-success {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.tokzap-success-icon {
+    font-size: 3rem;
+    color: var(--tokzap-success);
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.tokzap-step-success p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--tokzap-text);
+    margin: 0;
+}
+
+/* =========================================================================
+   Branding
+   ========================================================================= */
+
+.tokzap-branding {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--tokzap-text-muted);
+    margin: 16px 0 0;
+}
+
+.tokzap-branding a {
+    color: var(--tokzap-primary-dark);
+    text-decoration: none;
+}
+
+.tokzap-branding a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================================================
+   Responsivo — abaixo de 480px
+   ========================================================================= */
+
+@media (max-width: 480px) {
+    .tokzap-form-wrap {
+        padding: 16px;
+    }
+
+    .tokzap-digit {
+        width: 38px;
+        height: 46px;
+        font-size: 1.25rem;
+    }
+
+    .tokzap-code-inputs {
+        gap: 6px;
+    }
+}
