@@ -1,0 +1,325 @@
+/**
+ * TokZap Admin — Estilos da tela de configurações
+ *
+ * Layout dois colunas (formulário 72% + sidebar 25% + gap 3%).
+ * Usa variáveis nativas do wp-admin onde disponível.
+ * Responsivo: abaixo de 782px vira uma coluna.
+ */
+
+/* =========================================================================
+   Header
+   ========================================================================= */
+
+.tokzap-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.tokzap-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tokzap-logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d2327;
+    letter-spacing: -0.3px;
+}
+
+.tokzap-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.tokzap-plan-free {
+    background: #f0f0f1;
+    color: #50575e;
+}
+
+.tokzap-plan-starter,
+.tokzap-plan-basic {
+    background: #d7f0da;
+    color: #1a6129;
+}
+
+.tokzap-plan-pro,
+.tokzap-plan-business {
+    background: #e6f0fa;
+    color: #135e96;
+}
+
+/* =========================================================================
+   Layout duas colunas
+   ========================================================================= */
+
+.tokzap-settings-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 3%;
+}
+
+.tokzap-settings-main {
+    flex: 0 0 72%;
+    max-width: 72%;
+    min-width: 0;
+}
+
+.tokzap-settings-sidebar {
+    flex: 0 0 25%;
+    max-width: 25%;
+    min-width: 200px;
+}
+
+/* =========================================================================
+   Seções do formulário
+   ========================================================================= */
+
+.tokzap-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+}
+
+.tokzap-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0 0 12px;
+    padding: 0 0 10px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+/* Herda a table.form-table padrão do wp-admin */
+.tokzap-settings-main .form-table th {
+    width: 200px;
+    padding: 12px 10px 12px 0;
+}
+
+.tokzap-settings-main .form-table td {
+    padding: 12px 10px;
+}
+
+/* =========================================================================
+   Campo API Key
+   ========================================================================= */
+
+.tokzap-api-key-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tokzap-key-preview {
+    font-size: 12px;
+    color: #50575e;
+    margin: 0;
+}
+
+.tokzap-key-preview code {
+    background: #f6f7f7;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, monospace;
+    letter-spacing: 0.5px;
+}
+
+.tokzap-test-btn {
+    align-self: flex-start;
+    margin-top: 4px;
+}
+
+/* =========================================================================
+   Status de conexão
+   ========================================================================= */
+
+.tokzap-connection-status {
+    min-height: 26px;
+    margin-top: 6px;
+}
+
+.tokzap-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tokzap-status-connected {
+    background: #edfaee;
+    color: #00a32a;
+    border: 1px solid #c1e9c3;
+}
+
+.tokzap-status-disconnected {
+    background: #fef9e3;
+    color: #dba617;
+    border: 1px solid #f5e6ab;
+}
+
+.tokzap-status-invalid {
+    background: #fceaea;
+    color: #d63638;
+    border: 1px solid #f5c0c0;
+}
+
+.tokzap-status-testing {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #50575e;
+    font-size: 13px;
+}
+
+/* Spinner CSS puro */
+.tokzap-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #c3c4c7;
+    border-top-color: #39b54a;
+    border-radius: 50%;
+    animation: tokzap-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes tokzap-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =========================================================================
+   Campos bloqueados (plano Free)
+   ========================================================================= */
+
+.tokzap-locked,
+label.tokzap-locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tokzap-upgrade-notice {
+    color: #d63638;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+.tokzap-upgrade-notice a {
+    color: #d63638;
+    text-decoration: underline;
+}
+
+/* Linha da tabela com campo desabilitado (dependência 2FA) */
+.tokzap-field-disabled th,
+.tokzap-field-disabled td {
+    opacity: 0.5;
+}
+
+/* =========================================================================
+   Sidebar — cards
+   ========================================================================= */
+
+.tokzap-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.tokzap-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0 0 6px;
+}
+
+.tokzap-card p {
+    font-size: 12px;
+    color: #50575e;
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.tokzap-card-link {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.tokzap-card-upgrade {
+    border-color: #39b54a;
+    background: #f5fbf5;
+}
+
+.tokzap-card-upgrade h3 {
+    color: #1a6129;
+}
+
+/* Shortcode copy */
+.tokzap-shortcode-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+}
+
+.tokzap-shortcode-wrap code {
+    flex: 1;
+    background: #f6f7f7;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: Consolas, Monaco, monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #1d2327;
+}
+
+/* =========================================================================
+   Responsivo — abaixo de 782px (breakpoint nativo do wp-admin)
+   ========================================================================= */
+
+@media screen and (max-width: 782px) {
+    .tokzap-settings-layout {
+        flex-direction: column;
+    }
+
+    .tokzap-settings-main,
+    .tokzap-settings-sidebar {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .tokzap-settings-sidebar {
+        min-width: 0;
+    }
+
+    .tokzap-header {
+        flex-wrap: wrap;
+    }
+
+    .tokzap-settings-main .form-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 4px;
+    }
+}

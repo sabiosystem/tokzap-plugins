@@ -21,11 +21,16 @@ class TokZap_API
     private string $api_key;
 
     /**
-     * Inicializa o cliente com a API Key salva nas configurações.
+     * Inicializa o cliente com a API Key fornecida ou a salva nas configurações.
+     *
+     * Aceitar a key como parâmetro permite testar a conexão antes de salvar,
+     * sem alterar a opção atual do banco de dados.
+     *
+     * @param  string|null  $apiKey  API Key a usar; usa get_option se null.
      */
-    public function __construct()
+    public function __construct(?string $apiKey = null)
     {
-        $this->api_key = (string) get_option('tokzap_api_key', '');
+        $this->api_key = $apiKey ?? (string) get_option('tokzap_api_key', '');
     }
 
     /**
