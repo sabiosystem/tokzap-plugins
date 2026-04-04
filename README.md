@@ -1,56 +1,71 @@
 # TokZap Plugins & Integrations
 
-Official integrations, plugins and extensions for [TokZap](https://tokzap.com) — WhatsApp OTP gateway.
+Official integrations, plugins and extensions for [TokZap](https://tokzap.com) — WhatsApp OTP authentication gateway.
 
 ## Plugins
 
-| Plugin | Platform | Status | Download |
-|---|---|---|---|
-| [WordPress](./wordpress/) | WordPress 5.8+ | ✅ Stable v1.0.0 | [Latest release](https://github.com/sabiosystem/tokzap-plugins/releases/latest) |
-| [WooCommerce](./woocommerce/) | WooCommerce | 🔜 Em breve | — |
-| [n8n](./n8n/) | n8n Community | 🔜 Em breve | — |
-| [Zapier](./zapier/) | Zapier App | 🔜 Em breve | — |
-| [Make](./make/) | Make (Integromat) | 🔜 Em breve | — |
-| [Shopify](./shopify/) | Shopify App Store | 🔜 Em breve | — |
-| [Nuvemshop](./nuvemshop/) | Nuvemshop App Store | 🔜 Em breve | — |
-| [Moodle](./moodle/) | Moodle LMS | 🔜 Em breve | — |
+### WordPress
 
-## Quickstart
+| Plugin | Status | Download |
+|---|---|---|
+| [WordPress Core](./wordpress/core/) | ✅ Disponível v1.0.0 | [tokzap.com/downloads/wordpress](https://tokzap.com/downloads/wordpress) |
+| [WooCommerce Add-on](./wordpress/add-ons/woocommerce/) | 🚧 Em breve | — |
+| [Gravity Forms Add-on](./wordpress/add-ons/gravity-forms/) | 🚧 Em breve | — |
+| [WPForms Add-on](./wordpress/add-ons/wpforms/) | 🚧 Em breve | — |
+| [MemberPress Add-on](./wordpress/add-ons/memberpress/) | 🚧 Em breve | — |
+| [LearnDash Add-on](./wordpress/add-ons/learndash/) | 🚧 Em breve | — |
+| [Contact Form 7 Add-on](./wordpress/add-ons/contact-form-7/) | 🚧 Em breve | — |
 
-All integrations use the TokZap REST API:
+### No-Code / Automação
+
+| Integração | Status | Download |
+|---|---|---|
+| [n8n Community Node](./nocode/n8n/) | 🚧 Em breve | — |
+| [Zapier App](./nocode/zapier/) | 🚧 Em breve | — |
+| [Make (Integromat) App](./nocode/make/) | 🚧 Em breve | — |
+
+### E-commerce
+
+| Integração | Status |
+|---|---|
+| [Shopify App](./ecommerce/shopify/) | 🚧 Em breve |
+| [Nuvemshop App](./ecommerce/nuvemshop/) | 🚧 Em breve |
+| [VTEX IO Extension](./ecommerce/vtex/) | 🚧 Em breve |
+
+### LMS
+
+| Integração | Status |
+|---|---|
+| [Moodle Plugin](./lms/moodle/) | 🚧 Em breve |
+
+## Tag Convention
+
+Releases seguem o padrão `{pasta}/v{semver}`:
 
 ```
-Base URL: https://api.tokzap.com/v1
-Auth:     Authorization: Bearer tk_live_xxxxxxxxxxxxxxxxxxxx
+wordpress/v1.0.0
+n8n/v1.0.0
+shopify/v1.0.0
 ```
 
-Get your API key at [tokzap.com/api-keys](https://tokzap.com/api-keys).
+Cada tag dispara o workflow de release correspondente em `.github/workflows/`.
 
 ## API Reference
 
-Full documentation at [tokzap.com/docs](https://tokzap.com/docs).
+Todas as integrações usam a API REST do TokZap:
 
-### Send OTP
-```bash
-curl -X POST https://api.tokzap.com/v1/otp/send \
-  -H "Authorization: Bearer tk_live_..." \
-  -H "Content-Type: application/json" \
-  -d '{"phone": "5511999999999"}'
+```
+Base URL:  https://api.tokzap.com/v1
+Auth:      Authorization: Bearer tk_live_xxxxxxxxxxxxxxxxxxxx
 ```
 
-### Verify OTP
-```bash
-curl -X POST https://api.tokzap.com/v1/otp/verify \
-  -H "Authorization: Bearer tk_live_..." \
-  -H "Content-Type: application/json" \
-  -d '{"phone": "5511999999999", "code": "123456"}'
-```
+Obtenha sua API Key em [tokzap.com/api-keys](https://tokzap.com/api-keys).  
+Documentação completa em [tokzap.com/docs](https://tokzap.com/docs).
 
 ## Contributing
 
-Issues and PRs are welcome. Each integration lives in its own directory with its own `README.md` and release workflow.
+Veja [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## License
+---
 
-Each plugin ships under its platform's recommended license (see each directory).  
-TokZap API — © [SABIO SYSTEM TECNOLOGIA LTDA](https://tokzap.com)
+© [SABIO SYSTEM TECNOLOGIA LTDA](https://tokzap.com) · CNPJ 64.475.846/0001-60

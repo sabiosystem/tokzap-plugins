@@ -3,27 +3,81 @@ name: Release WordPress Plugin
 on:
   push:
     tags:
-      - 'wordpress/v*'
+      - 'wordpress/v*.*.*'
 
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#wordpress/v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "zip_name=tokzap-wordpress-${VERSION}.zip" >> $GITHUB_OUTPUT
+
+      - name: Install PHP dependencies
+        working-directory: wordpress/core
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-dev --optimize-autoloader --no-interaction
+          fi
+
+      - name: Build JS/CSS assets
+        working-directory: wordpress/core
+        run: |
+          if [ -f package.json ]; then
+            npm ci && npm run build
+          fi
 
       - name: Build ZIP
         run: |
-          cd wordpress
-          zip -r ../tokzap-whatsapp-otp.zip tokzap-whatsapp-otp/ -x "*.DS_Store" -x "__MACOSX/*"
+          ZIP_NAME="${{ steps.version.outputs.zip_name }}"
+          python3 -c "
+          import zipfile, os, re
+
+          EXCLUDE_DIRS = {'.git', 'node_modules', 'tests', '.github', 'vendor'}
+          EXCLUDE_EXTS = {'.md', '.map', '.lock'}
+          KEEP_FILES   = {'readme.txt'}
+
+          with zipfile.ZipFile('$ZIP_NAME', 'w', zipfile.ZIP_DEFLATED) as zf:
+              for root, dirs, files in os.walk('wordpress/core'):
+                  dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+                  for file in files:
+                      path = os.path.join(root, file)
+                      _, ext = os.path.splitext(file)
+                      if file in KEEP_FILES or ext not in EXCLUDE_EXTS:
+                          arcname = os.path.join('tokzap-whatsapp-otp', os.path.relpath(path, 'wordpress/core'))
+                          zf.write(path, arcname)
+          print(f'Created $ZIP_NAME')
+          "
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: tokzap-whatsapp-otp.zip
-          name: "WordPress Plugin ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
+          name: "WordPress Plugin v${{ steps.version.outputs.version }}"
+          files: ${{ steps.version.outputs.zip_name }}
           body: |
-            ## TokZap WhatsApp OTP — WordPress Plugin
+            ## TokZap WhatsApp OTP — WordPress Plugin v${{ steps.version.outputs.version }}
 
-            Download `tokzap-whatsapp-otp.zip` and install via WordPress admin.
+            ### Instalação
+            1. Baixe `${{ steps.version.outputs.zip_name }}`
+            2. WordPress admin → Plugins → Adicionar novo → Enviar plugin → selecione o ZIP
+            3. Ative e configure em **Configurações → TokZap**
+            4. Adicione `[tokzap_verify]` em qualquer página
 
-            **Full docs:** https://tokzap.com/docs/wordpress
+            **Docs completos:** https://tokzap.com/docs/wordpress
+
+      # Descomente quando tiver conta no wordpress.org
+      # - name: Deploy to WordPress.org SVN
+      #   uses: 10up/action-wordpress-plugin-deploy@stable
+      #   env:
+      #     SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+      #     SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      #     SLUG: tokzap-whatsapp-otp
