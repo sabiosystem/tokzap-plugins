@@ -1,0 +1,29 @@
+name: Release WordPress Plugin
+
+on:
+  push:
+    tags:
+      - 'wordpress/v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ZIP
+        run: |
+          cd wordpress
+          zip -r ../tokzap-whatsapp-otp.zip tokzap-whatsapp-otp/ -x "*.DS_Store" -x "__MACOSX/*"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tokzap-whatsapp-otp.zip
+          name: "WordPress Plugin ${{ github.ref_name }}"
+          body: |
+            ## TokZap WhatsApp OTP — WordPress Plugin
+
+            Download `tokzap-whatsapp-otp.zip` and install via WordPress admin.
+
+            **Full docs:** https://tokzap.com/docs/wordpress

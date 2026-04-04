@@ -1,0 +1,144 @@
+/**
+ * TokZap WhatsApp OTP — Estilos do formulário de verificação
+ * Compatível com a maioria dos temas WordPress.
+ */
+
+.tokzap-verify-wrap {
+    max-width: 400px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.tokzap-field {
+    margin-bottom: 16px;
+}
+
+.tokzap-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+.tokzap-field input[type="tel"],
+.tokzap-field input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    color: #111827;
+    background: #fff;
+}
+
+.tokzap-field input:focus {
+    border-color: #39b54a;
+    box-shadow: 0 0 0 3px rgba(57, 181, 74, 0.12);
+}
+
+.tokzap-hint {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.tokzap-error {
+    display: block;
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.tokzap-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    border: none;
+    text-decoration: none;
+}
+
+.tokzap-btn-primary {
+    background: #39b54a;
+    color: #fff;
+    width: 100%;
+    margin-top: 4px;
+    padding: 11px 20px;
+}
+
+.tokzap-btn-primary:hover:not(:disabled) {
+    background: #2d9139;
+}
+
+.tokzap-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.tokzap-btn-link {
+    background: none;
+    color: #39b54a;
+    font-size: 13px;
+    padding: 6px 0;
+    margin-top: 8px;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.tokzap-btn-link:hover {
+    text-decoration: underline;
+}
+
+.tokzap-success {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.tokzap-success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background: #39b54a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.tokzap-success-message {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.tokzap-branding {
+    margin-top: 14px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.tokzap-branding a {
+    color: #39b54a;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tokzap-branding a:hover {
+    text-decoration: underline;
+}
