@@ -23,6 +23,24 @@ define('TOKZAP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('TOKZAP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('TOKZAP_API_BASE', 'https://api.tokzap.com/v1');
 
+// Auto-update via GitHub Releases (sabiosystem/tokzap-plugins)
+require_once TOKZAP_PLUGIN_DIR.'vendor/autoload.php';
+
+add_action('init', function () {
+    if (! class_exists('YahnisElsts\PluginUpdateChecker\v5\PucFactory')) {
+        return;
+    }
+
+    $updateChecker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+        'https://github.com/sabiosystem/tokzap-plugins/',
+        __FILE__,
+        'tokzap'
+    );
+
+    // Usar GitHub Releases (não branch) — busca o asset tokzap-wordpress-*.zip
+    $updateChecker->getVcsApi()->enableReleaseAssets('/tokzap-wordpress-.*\.zip$/');
+});
+
 // Dependências legadas (mantidas para compatibilidade)
 require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-api.php';
 require_once TOKZAP_PLUGIN_DIR.'includes/class-tokzap-otp.php';

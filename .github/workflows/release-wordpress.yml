@@ -41,8 +41,8 @@ jobs:
           python3 -c "
           import zipfile, os, re
 
-          EXCLUDE_DIRS = {'.git', 'node_modules', 'tests', '.github', 'vendor'}
-          EXCLUDE_EXTS = {'.md', '.map', '.lock'}
+          EXCLUDE_DIRS = {'.git', 'node_modules', 'tests', '.github'}
+          EXCLUDE_EXTS = {'.map'}
           KEEP_FILES   = {'readme.txt'}
 
           with zipfile.ZipFile('$ZIP_NAME', 'w', zipfile.ZIP_DEFLATED) as zf:
