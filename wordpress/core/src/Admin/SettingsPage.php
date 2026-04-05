@@ -22,6 +22,42 @@ class TokZap_SettingsPage
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
         add_action('wp_ajax_tokzap_test_connection', [$this, 'ajax_test_connection']);
+
+        // Sincronizar plano com a API sempre que a página de configurações for carregada
+        add_action('load-settings_page_tokzap-settings', [$this, 'sync_plan_from_api']);
+    }
+
+    /**
+     * Consulta GET /v1/instance/status e atualiza as opções de plano locais.
+     * Executa apenas na página de configurações para não impactar performance.
+     */
+    public function sync_plan_from_api(): void
+    {
+        $api_key = (string) get_option('tokzap_api_key', '');
+        if (empty($api_key)) {
+            return;
+        }
+
+        $response = wp_remote_get(TOKZAP_API_BASE.'/instance/status', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$api_key,
+                'Accept'        => 'application/json',
+            ],
+            'timeout' => 8,
+        ]);
+
+        if (is_wp_error($response)) {
+            return;
+        }
+
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (! is_array($body) || ! isset($body['plan'])) {
+            return;
+        }
+
+        update_option('tokzap_plan', sanitize_text_field($body['plan']));
+        update_option('tokzap_allow_custom_message', (bool) ($body['allow_custom_message'] ?? false));
+        update_option('tokzap_show_branding', (bool) ($body['show_branding'] ?? true));
     }
 
     // -----------------------------------------------------------------------
@@ -629,6 +665,11 @@ class TokZap_SettingsPage
      */
     private function is_free_plan(): bool
     {
+        // Se a API já sincronizou allow_custom_message, usar esse dado diretamente
+        if (get_option('tokzap_allow_custom_message') !== false) {
+            return ! (bool) get_option('tokzap_allow_custom_message', false);
+        }
+
         $plan = (string) get_option('tokzap_plan', 'free');
 
         return $plan === '' || $plan === 'free';
